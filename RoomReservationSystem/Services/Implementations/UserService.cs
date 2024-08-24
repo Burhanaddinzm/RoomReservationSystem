@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using RoomReservationSystem.Models;
 using RoomReservationSystem.Services.Interfaces;
 using RoomReservationSystem.ViewModels.Auth;
@@ -45,5 +46,10 @@ public class UserService : IUserService
     public async Task<AppUser?> GetUserAsync(string email)
     {
         return await _userManager.FindByEmailAsync(email);
+    }
+
+    public async Task<bool> IsTableEmpty()
+    {
+        return !await _userManager.Users.AnyAsync();
     }
 }

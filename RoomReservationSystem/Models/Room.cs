@@ -2,7 +2,7 @@
 
 namespace RoomReservationSystem.Models;
 
-public class Room : BaseEntity
+public class Room : BaseAuditableEntity
 {
     public string Name { get; set; } = null!;
     public int Size { get; set; } = 12;

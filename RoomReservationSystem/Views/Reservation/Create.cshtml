@@ -4,36 +4,29 @@
 @section Styles {
     <link rel="stylesheet" href="~/assets/css/reserve.css" />
 }
+@model CreateReservationVM
 
-<form action="">
+<form asp-action="Create" asp-controller="Reservation" method="post">
     <div class="input-wrapper">
         <label for="room">Room</label>
-        <span>Room 1</span>
-        <input hidden value="1" required="required" id="room" type="number" />
+        <span>@ViewBag.Room.Name</span>
+        <input hidden value="@ViewBag.Room.Id" required="required" id="room" asp-for="RoomId" />
     </div>
     <div class="input-wrapper">
         <label for="theme">Theme</label>
-        <input required="required" id="theme" type="text" />
+        <input required="required" id="theme" asp-for="Theme" />
     </div>
     <div class="input-wrapper">
         <label for="start-date">Start Date</label>
-        <input required="required" id="start-date" type="datetime-local" />
+        <input required="required" id="start-date" type="datetime-local" asp-for="StartDate" />
     </div>
     <div class="input-wrapper">
         <label for="end-date">End Date</label>
-        <input required="required" id="end-date" type="datetime-local" />
+        <input required="required" id="end-date" type="datetime-local" asp-for="EndDate" />
     </div>
     <div class="input-wrapper">
         <label for="participant-select">Participants</label>
-        <select required="required"
-                multiple="multiple"
-                name="participants"
-                id="participant-select"
-                data-room-size="12">
-            <option value="TEST">Test</option>
-            <option value="TEST2">Test2</option>
-            <option value="TEST3">Test3</option>
-            <option value="TEST4">Test4</option>
+        <select required="required" id="participant-select" data-room-size="@ViewBag.Room.Size" asp-for="Participants" asp-items="@(new SelectList(ViewBag.Users, "Id", "FullName"))" multiple="multiple">
         </select>
     </div>
     <button type="submit">Reserve</button>

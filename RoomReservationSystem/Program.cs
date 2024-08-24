@@ -4,6 +4,8 @@ using RoomReservationSystem.Data;
 using RoomReservationSystem.Models;
 using RoomReservationSystem.Services.Implementations;
 using RoomReservationSystem.Services.Interfaces;
+using RoomReservationSystem.ViewModels.Auth;
+using System.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -57,6 +59,9 @@ var app = builder.Build();
     app.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}");
+
+    await Seed.SeedUsersAsync(app.Services);
+    await Seed.SeedRoomsAsync(app.Services);
 
     app.Run();
 }

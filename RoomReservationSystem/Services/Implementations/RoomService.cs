@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using RoomReservationSystem.Data;
 using RoomReservationSystem.Models;
 using RoomReservationSystem.Services.Interfaces;
@@ -17,7 +18,23 @@ public class RoomService : IRoomService
     public async Task<List<Room>> GetAllRoomsAsync()
     {
         return await _context.Rooms.AsNoTracking()
-                                   .OrderByDescending(x => x.Id)
+                                   .OrderBy(x => x.CreatedAt)
                                    .ToListAsync();
+    }
+
+    public async Task<Room?> GetRoomAsync(int id)
+    {
+        return await _context.Rooms.FindAsync(id);
+    }
+
+    public async Task CreateRoomAsync(Room room)
+    {
+        await _context.Rooms.AddAsync(room);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<bool> IsTableEmpty()
+    {
+        return !await _context.Rooms.AnyAsync();
     }
 }

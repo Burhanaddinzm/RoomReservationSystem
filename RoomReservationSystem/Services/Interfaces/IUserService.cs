@@ -10,4 +10,5 @@ public interface IUserService
     Task<bool> CheckDuplicate(string email);
     Task<AppUser?> FindCurrentUserAsync();
     Task<AppUser?> GetUserAsync(string email);
+    Task<bool> IsTableEmpty();
 }
