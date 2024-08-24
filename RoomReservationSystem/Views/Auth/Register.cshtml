@@ -1,0 +1,46 @@
+﻿@{
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+    ViewData["Title"] = "Register";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/assets/css/register.css" />
+}
+@model RegisterVM
+
+<form asp-action="Register" asp-controller="Auth" method="post">
+    <div class="input-wrapper">
+        <label for="name">Name</label>
+        <input id="name" asp-for="Name" placeholder="Enter your name..." />
+        <span asp-validation-for="Name" style="color:red"></span>
+    </div>
+    <div class="input-wrapper">
+        <label for="surname">Surname</label>
+        <input id="surname" asp-for="Surname" placeholder="Enter your surname..." />
+        <span asp-validation-for="Surname" style="color:red"></span>
+    </div>
+    <div class="input-wrapper">
+        <label for="email">Email</label>
+        <input id="email" asp-for="Email" placeholder="Enter your email..." />
+        <span asp-validation-for="Email" style="color:red"></span>
+    </div>
+    <div class="input-wrapper">
+        <label for="password">Password</label>
+        <input id="password"
+               asp-for="Password"
+               placeholder="Enter your password..." />
+        <span asp-validation-for="Password" style="color:red"></span>
+    </div>
+    <div class="input-wrapper">
+        <label for="c-password">Confirm Password</label>
+        <input id="c-password"
+               asp-for="ConfirmPassword"
+               placeholder="Confirm your password..." />
+        <span asp-validation-for="ConfirmPassword" style="color:red"></span>
+    </div>
+    <button type="submit">Register</button>
+    <div asp-validation-summary="ModelOnly" style="color:red"></div>
+</form>
+<div class="login-wrapper">
+    Already registered?
+    <a asp-action="Login" asp-controller="Auth">Login</a>
+</div>

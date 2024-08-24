@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace RoomReservationSystem.Controllers;
-
+[Authorize]
 public class ReservationController : Controller
 {
     [HttpGet]

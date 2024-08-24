@@ -6,7 +6,8 @@ namespace RoomReservationSystem.Services.Interfaces;
 
 public interface IUserService
 {
-    Task<IdentityResult> Create(RegisterVM registerVM);
+    Task<IdentityResult> CreateAsync(RegisterVM registerVM);
     Task<bool> CheckDuplicate(string email);
     Task<AppUser?> FindCurrentUserAsync();
+    Task<AppUser?> GetUserAsync(string email);
 }

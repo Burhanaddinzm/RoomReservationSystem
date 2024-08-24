@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using RoomReservationSystem.Models;
 using RoomReservationSystem.Models.Common;
 
 namespace RoomReservationSystem.Data;
 
-public class AppDbContext : DbContext
+public class AppDbContext : IdentityDbContext<AppUser>
 {
     private readonly IHttpContextAccessor _accessor;
     public AppDbContext(DbContextOptions<AppDbContext> options, IHttpContextAccessor accessor)

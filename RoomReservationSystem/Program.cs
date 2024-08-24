@@ -35,6 +35,7 @@ var builder = WebApplication.CreateBuilder(args);
         cookieAuthOptions.LogoutPath = "/auth/logout";
     });
 
+    builder.Services.AddScoped<IRoomService, RoomService>();
     builder.Services.AddScoped<IUserService, UserService>();
 
     builder.Services.AddTransient<IEmailSender, EmailSender>();
@@ -51,6 +52,7 @@ var app = builder.Build();
     app.UseHttpsRedirection();
     app.UseStaticFiles();
     app.UseRouting();
+    app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllerRoute(
         name: "default",

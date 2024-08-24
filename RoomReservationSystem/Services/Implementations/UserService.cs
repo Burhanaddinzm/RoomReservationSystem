@@ -18,7 +18,7 @@ public class UserService : IUserService
         _userManager = userManager;
     }
 
-    public async Task<IdentityResult> Create(RegisterVM registerVM)
+    public async Task<IdentityResult> CreateAsync(RegisterVM registerVM)
     {
         AppUser newUser = new AppUser
         {
@@ -26,6 +26,8 @@ public class UserService : IUserService
             Surname = registerVM.Surname,
             Email = registerVM.Email
         };
+        newUser.UserName = Guid.NewGuid().ToString() + "_" + newUser.FullName.ToLower().Replace(" ", "_");
+
         return await _userManager.CreateAsync(newUser, registerVM.Password);
     }
 
@@ -38,5 +40,10 @@ public class UserService : IUserService
     {
         var userName = _accessor?.HttpContext?.User?.Identity?.Name;
         return await _userManager.FindByNameAsync(userName!);
+    }
+
+    public async Task<AppUser?> GetUserAsync(string email)
+    {
+        return await _userManager.FindByEmailAsync(email);
     }
 }
