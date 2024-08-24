@@ -1,0 +1,234 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+input,
+button,
+select,
+textarea,
+a {
+  font-family: inherit;
+}
+
+a {
+  color: currentColor;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+}
+
+html {
+  font-family: "Poppins", sans-serif;
+  scroll-behavior: smooth;
+}
+
+body {
+  position: relative;
+  min-height: 100vh;
+  background-color: #333;
+}
+
+.container {
+  width: calc(100% - 80px);
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.active {
+  border-top: 3px solid rgba(127, 255, 0, 0.5);
+}
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: rgb(89, 82, 82);
+}
+
+nav ul {
+  display: flex;
+  padding-top: 18px;
+  height: 65px;
+  justify-content: center;
+  gap: 20px;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+nav ul a {
+  padding: 4px;
+  transition: box-shadow 0.3s ease-in-out, font-size 0.3s ease-in-out;
+}
+
+nav ul li:not(.active) a:hover {
+  font-size: 20px;
+  box-shadow: rgba(127, 255, 0, 0.4) 5px 5px, rgba(127, 255, 0, 0.3) 10px 10px;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0;
+  background-color: rgb(89, 82, 82);
+}
+
+footer span {
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+main {
+  padding: 40px 0 80px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  row-gap: 40px;
+  justify-items: center;
+}
+
+.reservation-card {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  text-align: center;
+  transition: all 0.3s ease-in-out;
+  position: relative;
+}
+
+.reservation-card:hover:not(.done) {
+  scale: 1.05;
+  box-shadow: rgba(127, 255, 0, 0.25) 0px 30px 40px -12px inset;
+}
+
+.done {
+  box-shadow: rgba(124, 9, 9, 0.25) 0px 30px 40px -12px inset;
+  opacity: 0.7;
+}
+
+.reservation-card h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.reservation-card p {
+  font-size: 16px;
+  margin: 10px 0;
+  color: #555;
+}
+
+.reservation-card button {
+  display: block;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 20px auto 0;
+}
+
+.reservation-card button:hover:not(.done a) {
+  background-color: #218838;
+}
+
+.done a {
+  background-color: grey;
+  cursor: not-allowed;
+}
+
+@media screen and (max-width: 1440px) {
+  main {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .reservation-card {
+    padding: 18px;
+    width: 270px;
+  }
+
+  .reservation-card ul li {
+    font-size: 14px;
+  }
+
+  .reservation-card h2 {
+    font-size: 18px;
+  }
+
+  .reservation-card p {
+    font-size: 14px;
+  }
+
+  .reservation-card button {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  main {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  nav ul {
+    gap: 18px;
+    font-size: 16px;
+  }
+
+  nav ul li:not(.active) a:hover {
+    font-size: 18px;
+    box-shadow: rgba(127, 255, 0, 0.4) 3px 3px, rgba(127, 255, 0, 0.3) 7px 7px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    width: calc(100% - 30px);
+  }
+
+  main {
+    grid-template-columns: 1fr;
+  }
+
+  nav ul {
+    gap: 8px;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .active {
+    border-width: 2px;
+  }
+
+  nav ul {
+    gap: 4px;
+    font-size: 14px;
+    padding-top: 16px;
+    height: 50px;
+  }
+
+  nav ul li:not(.active) a:hover {
+    font-size: 14px;
+    box-shadow: none;
+  }
+}

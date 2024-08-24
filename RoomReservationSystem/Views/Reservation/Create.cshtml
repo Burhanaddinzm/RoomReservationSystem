@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "Reserve a Room";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/assets/css/reserve.css" />
+}
+
+<form action="">
+    <div class="input-wrapper">
+        <label for="room">Room</label>
+        <span>Room 1</span>
+        <input hidden value="1" required="required" id="room" type="number" />
+    </div>
+    <div class="input-wrapper">
+        <label for="theme">Theme</label>
+        <input required="required" id="theme" type="text" />
+    </div>
+    <div class="input-wrapper">
+        <label for="start-date">Start Date</label>
+        <input required="required" id="start-date" type="datetime-local" />
+    </div>
+    <div class="input-wrapper">
+        <label for="end-date">End Date</label>
+        <input required="required" id="end-date" type="datetime-local" />
+    </div>
+    <div class="input-wrapper">
+        <label for="participant-select">Participants</label>
+        <select required="required"
+                multiple="multiple"
+                name="participants"
+                id="participant-select"
+                data-room-size="12">
+            <option value="TEST">Test</option>
+            <option value="TEST2">Test2</option>
+            <option value="TEST3">Test3</option>
+            <option value="TEST4">Test4</option>
+        </select>
+    </div>
+    <button type="submit">Reserve</button>
+</form>
+
+@section Scripts {
+    <script src="~/assets/js/reserve.js"></script>
+}

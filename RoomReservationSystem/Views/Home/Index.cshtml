@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "Room Reservation System";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/assets/css/index.css" />
+}
+
+<div class="room-card occupied">
+    <h2>Room 1</h2>
+    <p><strong>Size:</strong> 12 People</p>
+    <p><strong>Availability:</strong> Occupied</p>
+    <p><strong>Available:</strong> 18.05.2024 18:00</p>
+    <a onclick="event.preventDefault()" href="#">Reserve</a>
+</div>
+<div class="room-card">
+    <h2>Room 2</h2>
+    <p><strong>Size:</strong> 12 People</p>
+    <p><strong>Availability:</strong> Available</p>
+    <p><strong>Available:</strong> Now</p>
+    <a asp-action="Create" asp-controller="Reservation" asp-route-roomId="">Reserve</a>
+</div>
+<div class="room-card occupied">
+    <h2>Room 3</h2>
+    <p><strong>Size:</strong> 12 People</p>
+    <p><strong>Availability:</strong> Occupied</p>
+    <p><strong>Available:</strong> 18.05.2024 18:00</p>
+    <a onclick="event.preventDefault()" href="#">Reserve</a>
+</div>
+<div class="room-card occupied">
+    <h2>Room 4</h2>
+    <p><strong>Size:</strong> 12 People</p>
+    <p><strong>Availability:</strong> Occupied</p>
+    <p><strong>Available:</strong> 18.05.2024 18:00</p>
+    <a onclick="event.preventDefault()" href="#">Reserve</a>
+</div>

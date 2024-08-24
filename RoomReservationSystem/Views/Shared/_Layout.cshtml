@@ -1,0 +1,50 @@
+﻿﻿@{
+    string? title = (string)ViewData["Title"];
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    @await RenderSectionAsync("Styles", true)
+    <title>@title</title>
+    <link rel="apple-touch-icon"
+          sizes="180x180"
+          href="~/assets/apple-touch-icon.png" />
+    <link rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="~/assets/favicon-32x32.png" />
+    <link rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="~/assets/favicon-16x16.png" />
+    <link rel="manifest" href="~/assets/site.webmanifest" />
+</head>
+<body>
+    <header>
+        <nav>
+            <ul class="container">
+                <li class="@(title == "Room Reservation System" ? "active" : "")">
+                    <a asp-action="Index" asp-controller="Home">Available Rooms</a>
+                </li>
+                <li class="@(title == "My Reservations" ? "active" : "")">
+                    <a asp-action="Index" asp-controller="Reservation">My Reservations</a>
+                </li>
+                <li>
+                    <a href="#">Logout</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        @RenderBody()
+    </main>
+
+    <footer>
+        <span>© 2024 Room Reservation System</span>
+    </footer>
+    @await RenderSectionAsync("Scripts", false)
+</body>
+</html>
