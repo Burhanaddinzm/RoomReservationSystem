@@ -10,9 +10,9 @@ public class CreateReservationVM
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public int RoomId { get; set; }
-    public ICollection<AppUser> Participants { get; set; }
+    public ICollection<string> ParticipantIds { get; set; }
     public CreateReservationVM()
     {
-        Participants = new List<AppUser>();
+        ParticipantIds = new List<string>();
     }
 }

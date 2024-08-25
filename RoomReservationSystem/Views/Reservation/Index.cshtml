@@ -1,49 +1,69 @@
-﻿@{
+﻿@inject IUserService userService
+@{
     ViewData["Title"] = "My Reservations";
+    var currentUser = await userService.FindCurrentUserAsync();
 }
 @section Styles {
     <link rel="stylesheet" href="~/assets/css/my-reservations.css" />
 }
+@model List<Reservation>
 
-<div class="reservation-card">
-    <h2>Room 1</h2>
-    <p><strong>Theme:</strong> Solving problems</p>
-    <p><strong>As:</strong> Host</p>
-    <p><strong>Participants:</strong></p>
-    <ul>
-        <li>- Burhanaddin Mirsadizada</li>
-        <li>- Asim Namazov</li>
-    </ul>
-    <p><strong>Status:</strong> Ongoing</p>
-    <p><strong>Start:</strong> 22.08.2024 15:00</p>
-    <p><strong>End:</strong> 22.08.2024 16:00</p>
-    <form action="">
-        <button type="submit">Cancel</button>
-    </form>
-</div>
-<div class="reservation-card done">
-    <h2>Room 2</h2>
-    <p><strong>Theme:</strong> Talking about stuff</p>
-    <p><strong>As:</strong> Host</p>
-    <p><strong>Participants:</strong></p>
-    <ul>
-        <li>- Burhanaddin Mirsadizada</li>
-        <li>- Asim Namazov</li>
-    </ul>
-    <p><strong>Status:</strong> Canceled</p>
-    <p><strong>Started:</strong> 21.08.2024 15:00</p>
-    <p><strong>Ended:</strong> 21.08.2024 16:00</p>
-</div>
-<div class="reservation-card done">
-    <h2>Room 1</h2>
-    <p><strong>Theme:</strong> Partying</p>
-    <p><strong>As:</strong> Guest</p>
-    <p><strong>Participants:</strong></p>
-    <ul>
-        <li>- Burhanaddin Mirsadizada</li>
-        <li>- Asim Namazov</li>
-    </ul>
-    <p><strong>Status:</strong> Completed</p>
-    <p><strong>Started:</strong> 18.05.2024 16:00</p>
-    <p><strong>Ended:</strong> 18.05.2024 18:00</p>
-</div>
+@foreach (var reservation in Model)
+{
+    if (reservation.Status == ReservationStatus.Ongoing)
+    {
+        <div class="reservation-card">
+            <h2>@reservation.Room.Name</h2>
+            <p><strong>Theme:</strong> @reservation.Theme</p>
+            @if (reservation.HostId == currentUser!.Id)
+            {
+                <p><strong>As:</strong> Host</p>
+            }
+            else
+            {
+                <p><strong>As:</strong> Guest</p>
+            }
+            <p><strong>Participants:</strong></p>
+            <ul>
+                @foreach (var participant in reservation.Participants)
+                {
+                    <li>- @participant.FullName</li>
+                }
+            </ul>
+            <p><strong>Status:</strong> @reservation.Status.ToString()</p>
+            <p><strong>Start:</strong> @reservation.StartDate</p>
+            <p><strong>End:</strong> @reservation.EndDate</p>
+            @if (reservation.HostId == currentUser!.Id)
+            {
+                <form asp-action="Cancel" asp-controller="Reservation" asp-route-reservationId="@reservation.Id" method="post">
+                    <button type="submit">Cancel</button>
+                </form>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="reservation-card done">
+            <h2>@reservation.Room.Name</h2>
+            <p><strong>Theme:</strong> @reservation.Theme</p>
+            @if (reservation.HostId == currentUser!.Id)
+            {
+                <p><strong>As:</strong> Host</p>
+            }
+            else
+            {
+                <p><strong>As:</strong> Guest</p>
+            }
+            <p><strong>Participants:</strong></p>
+            <ul>
+                @foreach (var participant in reservation.Participants)
+                {
+                    <li>- @participant.FullName</li>
+                }
+            </ul>
+            <p><strong>Status:</strong> @reservation.Status.ToString()</p>
+            <p><strong>Start:</strong> @reservation.StartDate</p>
+            <p><strong>End:</strong> @reservation.EndDate</p>
+        </div>
+    }
+}

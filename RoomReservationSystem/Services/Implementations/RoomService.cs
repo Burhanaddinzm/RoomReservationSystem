@@ -18,6 +18,7 @@ public class RoomService : IRoomService
     public async Task<List<Room>> GetAllRoomsAsync()
     {
         return await _context.Rooms.AsNoTracking()
+                                   .Include(x => x.Reservations)
                                    .OrderBy(x => x.CreatedAt)
                                    .ToListAsync();
     }
@@ -36,5 +37,10 @@ public class RoomService : IRoomService
     public async Task<bool> IsTableEmpty()
     {
         return !await _context.Rooms.AnyAsync();
+    }
+
+    public async Task ChangeAvailability()
+    {
+
     }
 }

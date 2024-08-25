@@ -38,6 +38,7 @@ var builder = WebApplication.CreateBuilder(args);
     });
 
     builder.Services.AddScoped<IRoomService, RoomService>();
+    builder.Services.AddScoped<IReservationService, ReservationService>();
     builder.Services.AddScoped<IUserService, UserService>();
 
     builder.Services.AddTransient<IEmailSender, EmailSender>();

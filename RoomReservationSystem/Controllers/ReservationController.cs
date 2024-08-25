@@ -13,20 +13,24 @@ public class ReservationController : Controller
     private readonly UserManager<AppUser> _userManager;
     private readonly IRoomService _roomService;
     private readonly IUserService _userService;
+    private readonly IReservationService _reservationService;
     public ReservationController(
         UserManager<AppUser> userManager,
         IRoomService roomService,
-        IUserService userService)
+        IUserService userService,
+        IReservationService reservationService)
     {
         _userManager = userManager;
         _roomService = roomService;
         _userService = userService;
+        _reservationService = reservationService;
     }
 
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        return View();
+        var reservations = await _reservationService.GetAllReservationsAsync();
+        return View(reservations);
     }
 
     [HttpGet]
@@ -58,6 +62,16 @@ public class ReservationController : Controller
     [HttpPost]
     public async Task<IActionResult> Create(CreateReservationVM reservationVM)
     {
+        var currentUser = await _userService.FindCurrentUserAsync();
+
+        if (!ModelState.IsValid)
+        {
+            ViewBag.Users = await _userManager.Users.Where(x => x.Id != currentUser!.Id).ToListAsync();
+            return View(reservationVM);
+        }
+
+        await _reservationService.CreateAsync(reservationVM, currentUser!);
         return RedirectToAction(nameof(Index));
     }
+
 }

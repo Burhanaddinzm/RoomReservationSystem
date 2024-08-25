@@ -26,7 +26,7 @@
     </div>
     <div class="input-wrapper">
         <label for="participant-select">Participants</label>
-        <select required="required" id="participant-select" data-room-size="@ViewBag.Room.Size" asp-for="Participants" asp-items="@(new SelectList(ViewBag.Users, "Id", "FullName"))" multiple="multiple">
+        <select required="required" id="participant-select" data-room-size="@ViewBag.Room.Size" asp-for="ParticipantIds" asp-items="@(new SelectList(ViewBag.Users, "Id", "FullName"))" multiple="multiple">
         </select>
     </div>
     <button type="submit">Reserve</button>
