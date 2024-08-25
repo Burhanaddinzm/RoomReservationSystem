@@ -8,4 +8,5 @@ public interface IRoomService
     Task CreateRoomAsync(Room room);
     Task<bool> IsTableEmpty();
     Task<Room?> GetRoomAsync(int id);
+    Task UpdateRoomAvailabilityAsync(int roomId, bool available);
 }

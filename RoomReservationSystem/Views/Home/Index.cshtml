@@ -14,7 +14,7 @@
             <h2>@room.Name</h2>
             <p><strong>Size:</strong> @room.Size People</p>
             <p><strong>Availability:</strong> Occupied</p>
-            <p><strong>Available:</strong> @room.Reservations.FirstOrDefault(x => x.Status == ReservationStatus.Ongoing)</p>
+            <p><strong>Available:</strong> @room.Reservations.FirstOrDefault(x => x.Status == ReservationStatus.Ongoing).EndDate</p>
             <a onclick="event.preventDefault()" href="#">Reserve</a>
         </div>
     }

@@ -8,5 +8,7 @@ public interface IReservationService
 {
     Task CancelReservationAsync(int id);
     Task<List<Reservation>> GetAllReservationsAsync();
-    Task CreateAsync(CreateReservationVM reservationVM, AppUser host);
+    Task<Reservation?> GetReservationAsync(int id);
+    Task CreateAsync(CreateReservationVM reservationVM, AppUser host, Room room);
+    Task UpdateStatus();
 }

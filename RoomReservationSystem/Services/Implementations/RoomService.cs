@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RoomReservationSystem.Data;
+using RoomReservationSystem.Enums;
 using RoomReservationSystem.Models;
 using RoomReservationSystem.Services.Interfaces;
 
@@ -39,8 +40,12 @@ public class RoomService : IRoomService
         return !await _context.Rooms.AnyAsync();
     }
 
-    public async Task ChangeAvailability()
+    public async Task UpdateRoomAvailabilityAsync(int roomId, bool available)
     {
-
+        var room = await GetRoomAsync(roomId);
+        room.IsAvailable = available;
+        _context.Rooms.Update(room);
+        await _context.SaveChangesAsync();
     }
+
 }

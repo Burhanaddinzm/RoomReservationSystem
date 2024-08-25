@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RoomReservationSystem.Data;
 using RoomReservationSystem.Models;
+using RoomReservationSystem.Services;
 using RoomReservationSystem.Services.Implementations;
 using RoomReservationSystem.Services.Interfaces;
 using RoomReservationSystem.ViewModels.Auth;
@@ -36,6 +37,7 @@ var builder = WebApplication.CreateBuilder(args);
         cookieAuthOptions.LoginPath = "/auth/login";
         cookieAuthOptions.LogoutPath = "/auth/logout";
     });
+    builder.Services.AddHostedService<RoomAvailabilityHostedService>();
 
     builder.Services.AddScoped<IRoomService, RoomService>();
     builder.Services.AddScoped<IReservationService, ReservationService>();

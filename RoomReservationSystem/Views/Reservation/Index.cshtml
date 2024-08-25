@@ -2,68 +2,69 @@
 @{
     ViewData["Title"] = "My Reservations";
     var currentUser = await userService.FindCurrentUserAsync();
+    var userReservations = Model.Where(x => x.Participants.Any(p => p.Id == currentUser!.Id) || x.HostId == currentUser!.Id);
+
+    PagerVM? pager = new PagerVM();
+    if (ViewBag.Pager != null)
+    {
+        pager = ViewBag.Pager as PagerVM;
+    }
 }
 @section Styles {
     <link rel="stylesheet" href="~/assets/css/my-reservations.css" />
 }
 @model List<Reservation>
 
-@foreach (var reservation in Model)
+@foreach (var reservation in userReservations)
 {
-    if (reservation.Status == ReservationStatus.Ongoing)
-    {
-        <div class="reservation-card">
-            <h2>@reservation.Room.Name</h2>
-            <p><strong>Theme:</strong> @reservation.Theme</p>
-            @if (reservation.HostId == currentUser!.Id)
+    <div class="reservation-card @(reservation.Status == ReservationStatus.Ongoing ? "" : "done")">
+        <h2>@reservation.Room.Name</h2>
+        <p><strong>Theme:</strong> @reservation.Theme</p>
+        <p><strong>As:</strong> @(reservation.HostId == currentUser.Id ? "Host" : "Guest")</p>
+        <p><strong>Participants:</strong></p>
+        <ul>
+            @foreach (var participant in reservation.Participants)
             {
-                <p><strong>As:</strong> Host</p>
+                <li>- @participant.FullName</li>
             }
-            else
-            {
-                <p><strong>As:</strong> Guest</p>
-            }
-            <p><strong>Participants:</strong></p>
-            <ul>
-                @foreach (var participant in reservation.Participants)
-                {
-                    <li>- @participant.FullName</li>
-                }
-            </ul>
-            <p><strong>Status:</strong> @reservation.Status.ToString()</p>
-            <p><strong>Start:</strong> @reservation.StartDate</p>
-            <p><strong>End:</strong> @reservation.EndDate</p>
-            @if (reservation.HostId == currentUser!.Id)
-            {
-                <form asp-action="Cancel" asp-controller="Reservation" asp-route-reservationId="@reservation.Id" method="post">
-                    <button type="submit">Cancel</button>
-                </form>
-            }
-        </div>
-    }
-    else
-    {
-        <div class="reservation-card done">
-            <h2>@reservation.Room.Name</h2>
-            <p><strong>Theme:</strong> @reservation.Theme</p>
-            @if (reservation.HostId == currentUser!.Id)
-            {
-                <p><strong>As:</strong> Host</p>
-            }
-            else
-            {
-                <p><strong>As:</strong> Guest</p>
-            }
-            <p><strong>Participants:</strong></p>
-            <ul>
-                @foreach (var participant in reservation.Participants)
-                {
-                    <li>- @participant.FullName</li>
-                }
-            </ul>
-            <p><strong>Status:</strong> @reservation.Status.ToString()</p>
-            <p><strong>Start:</strong> @reservation.StartDate</p>
-            <p><strong>End:</strong> @reservation.EndDate</p>
-        </div>
-    }
+        </ul>
+        <p><strong>Status:</strong> @reservation.Status.ToString()</p>
+        <p><strong>Start:</strong> @reservation.StartDate</p>
+        <p><strong>End:</strong> @reservation.EndDate</p>
+
+        @if (reservation.Status == ReservationStatus.Ongoing && reservation.HostId == currentUser.Id)
+        {
+            <form asp-action="CancelReservation" asp-controller="Reservation" asp-route-id="@reservation.Id" method="post">
+                <button type="submit">Cancel</button>
+            </form>
+        }
+    </div>
 }
+
+<ul class="pagination">
+    @if (pager?.TotalPages > 0)
+    {
+        @if (pager.CurrentPage > 1)
+        {
+            @if (pager.CurrentPage != 2)
+            {
+                <a asp-action="Index" asp-controller="Reservation" asp-route-page="1" class="page-link">@("<<")</a>
+            }
+            <a asp-action="Index" asp-controller="Reservation" asp-route-page="@(pager.CurrentPage - 1)" class="page-link">@("<")</a>
+        }
+        @for (int i = pager.StartPage; i <= pager.EndPage; i++)
+        {
+            <li class="paginate_button page-item @(i == pager.CurrentPage ? "active" : "")">
+                <a asp-action="Index" asp-controller="Reservation" asp-route-page="@i" class="page-link">@i</a>
+            </li>
+        }
+        @if (pager.CurrentPage < pager.TotalPages)
+        {
+            <a asp-action="Index" asp-controller="Reservation" asp-route-page="@(pager.CurrentPage + 1)" class="page-link">@(">")</a>
+            @if (pager.CurrentPage != pager.TotalPages - 1)
+            {
+                <a asp-action="Index" asp-controller="Reservation" asp-route-page="@(pager.TotalPages)" class="page-link">@(">>")</a>
+            }
+        }
+    }
+</ul>

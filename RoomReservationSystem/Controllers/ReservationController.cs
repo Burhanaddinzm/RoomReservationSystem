@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Azure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RoomReservationSystem.Models;
 using RoomReservationSystem.Services.Interfaces;
+using RoomReservationSystem.ViewModels.Pagination;
 using RoomReservationSystem.ViewModels.Reservation;
 
 namespace RoomReservationSystem.Controllers;
@@ -27,10 +29,18 @@ public class ReservationController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(int page = 1)
     {
         var reservations = await _reservationService.GetAllReservationsAsync();
-        return View(reservations);
+
+        int itemCount = reservations.Count();
+        var pager = new PagerVM(itemCount, page);
+        int itemsToSkip = (pager.CurrentPage - 1) * pager.PageSize;
+        var data = reservations.Skip(itemsToSkip).Take(pager.PageSize).ToList();
+
+        ViewBag.Pager = pager;
+
+        return View(data);
     }
 
     [HttpGet]
@@ -63,6 +73,7 @@ public class ReservationController : Controller
     public async Task<IActionResult> Create(CreateReservationVM reservationVM)
     {
         var currentUser = await _userService.FindCurrentUserAsync();
+        var room = await _roomService.GetRoomAsync(reservationVM.RoomId);
 
         if (!ModelState.IsValid)
         {
@@ -70,7 +81,14 @@ public class ReservationController : Controller
             return View(reservationVM);
         }
 
-        await _reservationService.CreateAsync(reservationVM, currentUser!);
+        await _reservationService.CreateAsync(reservationVM, currentUser!, room);
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CancelReservation(int id)
+    {
+        await _reservationService.CancelReservationAsync(id);
         return RedirectToAction(nameof(Index));
     }
 
