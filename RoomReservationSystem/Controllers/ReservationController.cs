@@ -1,5 +1,4 @@
-﻿using Azure;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -81,7 +80,16 @@ public class ReservationController : Controller
             return View(reservationVM);
         }
 
-        await _reservationService.CreateAsync(reservationVM, currentUser!, room);
+        try
+        {
+            await _reservationService.CreateAsync(reservationVM, currentUser!, room!);
+        }
+        catch (Exception ex)
+        {
+            ModelState.AddModelError("", ex.Message);
+            return View(reservationVM);
+        }
+
         return RedirectToAction(nameof(Index));
     }
 

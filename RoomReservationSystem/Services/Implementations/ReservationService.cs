@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RoomReservationSystem.Data;
 using RoomReservationSystem.Enums;
+using RoomReservationSystem.Helpers;
 using RoomReservationSystem.Models;
+using RoomReservationSystem.Models.Exceptions;
 using RoomReservationSystem.Services.Interfaces;
 using RoomReservationSystem.ViewModels.Reservation;
 
@@ -43,24 +45,31 @@ public class ReservationService : IReservationService
                                   .Where(x => reservationVM.ParticipantIds.Contains(x.Id))
                                   .ToListAsync();
 
+        var (startDate, endDate) = HandleReservation(reservationVM.StartDate,
+                                                     reservationVM.EndDate,
+                                                     room.Size,
+                                                     participants.Count);
+
         var reservation = new Reservation
         {
             Theme = reservationVM.Theme,
             Status = reservationVM.Status,
-            StartDate = reservationVM.StartDate,
-            EndDate = reservationVM.EndDate,
+            StartDate = startDate,
+            EndDate = endDate,
             RoomId = reservationVM.RoomId,
             HostId = host.Id,
             Participants = participants
         };
 
-        foreach (var participant in participants)
-        {
-            string message = $"Hello {participant.FullName}, you have been invited to ${room.Name} by ${host.FullName} at ${reservationVM.StartDate}.";
-            await _emailSender.SendEmailAsync(participant.Email!, "Room Invite", message);
-        }
+        //foreach (var participant in participants)
+        //{
+        //    string message = $"Hello {participant.FullName}, you have been invited to ${room.Name} by ${host.FullName} at ${reservationVM.StartDate}.";
+        //    await _emailSender.SendEmailAsync(participant.Email!, "Room Invite", message);
+        //}
 
         await _roomService.UpdateRoomAvailabilityAsync(reservationVM.RoomId, false);
+        host.HostedReservations.Add(reservation);
+        _context.Users.Update(host);
         await _context.Reservations.AddAsync(reservation);
         await _context.SaveChangesAsync();
     }
@@ -91,5 +100,29 @@ public class ReservationService : IReservationService
         }
 
         await _context.SaveChangesAsync();
+    }
+
+    private (DateTime, DateTime) HandleReservation(DateTime startDate, DateTime endDate, int roomSize, int participantCount)
+    {
+        var now = DateTime.UtcNow.AddHours(4);
+        var roundedNow = DateTimeHelpers.RoundToNext30Minutes(now);
+
+        if (startDate < roundedNow)
+        {
+            throw new InvalidReservationException("Start date must be in the future and rounded to the nearest 30 minutes.");
+        }
+        var roundedStart = DateTimeHelpers.RoundToNext30Minutes(startDate);
+
+        if (endDate <= roundedStart)
+        {
+            throw new InvalidReservationException("End date must be at least 30 minutes after the start date.");
+        }
+        var roundedEnd = DateTimeHelpers.RoundToNext30Minutes(endDate);
+
+        if (roomSize <= 0 || roomSize < participantCount)
+        {
+            throw new InvalidReservationException("Participant count surpasses room size.");
+        }
+        return (roundedStart, roundedEnd);
     }
 }

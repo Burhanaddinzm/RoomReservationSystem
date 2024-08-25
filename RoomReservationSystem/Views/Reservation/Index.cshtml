@@ -15,31 +15,34 @@
 }
 @model List<Reservation>
 
-@foreach (var reservation in userReservations)
-{
-    <div class="reservation-card @(reservation.Status == ReservationStatus.Ongoing ? "" : "done")">
-        <h2>@reservation.Room.Name</h2>
-        <p><strong>Theme:</strong> @reservation.Theme</p>
-        <p><strong>As:</strong> @(reservation.HostId == currentUser.Id ? "Host" : "Guest")</p>
-        <p><strong>Participants:</strong></p>
-        <ul>
-            @foreach (var participant in reservation.Participants)
-            {
-                <li>- @participant.FullName</li>
-            }
-        </ul>
-        <p><strong>Status:</strong> @reservation.Status.ToString()</p>
-        <p><strong>Start:</strong> @reservation.StartDate</p>
-        <p><strong>End:</strong> @reservation.EndDate</p>
+<div class="card-container">
+    @foreach (var reservation in userReservations)
+    {
+        <div class="reservation-card @(reservation.Status == ReservationStatus.Ongoing ? "" : "done")">
+            <h2>@reservation.Room.Name</h2>
+            <p><strong>Theme:</strong> @reservation.Theme</p>
+            <p><strong>As:</strong> @(reservation.HostId == currentUser.Id ? "Host" : "Guest")</p>
+            <p><strong>Participants:</strong></p>
+            <ul>
+                <li>- <strong>@reservation.Host.FullName</strong></li>
+                @foreach (var participant in reservation.Participants)
+                {
+                    <li>- @participant.FullName</li>
+                }
+            </ul>
+            <p><strong>Status:</strong> @reservation.Status.ToString()</p>
+            <p><strong>Start:</strong> @reservation.StartDate</p>
+            <p><strong>End:</strong> @reservation.EndDate</p>
 
-        @if (reservation.Status == ReservationStatus.Ongoing && reservation.HostId == currentUser.Id)
-        {
-            <form asp-action="CancelReservation" asp-controller="Reservation" asp-route-id="@reservation.Id" method="post">
-                <button type="submit">Cancel</button>
-            </form>
-        }
-    </div>
-}
+            @if (reservation.Status == ReservationStatus.Ongoing && reservation.HostId == currentUser.Id)
+            {
+                <form asp-action="CancelReservation" asp-controller="Reservation" asp-route-id="@reservation.Id" method="post">
+                    <button type="submit">Cancel</button>
+                </form>
+            }
+        </div>
+    }
+</div>
 
 <ul class="pagination">
     @if (pager?.TotalPages > 0)
@@ -54,7 +57,7 @@
         }
         @for (int i = pager.StartPage; i <= pager.EndPage; i++)
         {
-            <li class="paginate_button page-item @(i == pager.CurrentPage ? "active" : "")">
+            <li class="paginate_button page-item @(i == pager.CurrentPage ? "li-active" : "")">
                 <a asp-action="Index" asp-controller="Reservation" asp-route-page="@i" class="page-link">@i</a>
             </li>
         }

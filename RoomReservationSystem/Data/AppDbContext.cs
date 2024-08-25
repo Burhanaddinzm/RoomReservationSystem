@@ -46,6 +46,18 @@ public class AppDbContext : IdentityDbContext<AppUser>
     {
         modelBuilder.Entity<Room>().HasQueryFilter(x => !x.IsDeleted);
         modelBuilder.Entity<Reservation>().HasQueryFilter(x => !x.IsDeleted);
+
+        modelBuilder.Entity<Reservation>()
+            .HasOne(r => r.Host)
+            .WithMany(u => u.HostedReservations)
+            .HasForeignKey(r => r.HostId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<Reservation>()
+            .HasMany(r => r.Participants)
+            .WithMany(u => u.Reservations)
+            .UsingEntity(j => j.ToTable("UserReservations"));
+
         base.OnModelCreating(modelBuilder);
     }
 }

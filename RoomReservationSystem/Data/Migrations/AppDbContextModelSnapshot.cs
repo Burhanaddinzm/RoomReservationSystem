@@ -22,6 +22,21 @@ namespace RoomReservationSystem.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("AppUserReservation", b =>
+                {
+                    b.Property<string>("ParticipantsId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ReservationsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ParticipantsId", "ReservationsId");
+
+                    b.HasIndex("ReservationsId");
+
+                    b.ToTable("UserReservations", (string)null);
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -201,9 +216,6 @@ namespace RoomReservationSystem.Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("ReservationId")
-                        .HasColumnType("int");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -227,8 +239,6 @@ namespace RoomReservationSystem.Data.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.HasIndex("ReservationId");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -287,7 +297,7 @@ namespace RoomReservationSystem.Data.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("Reservations", (string)null);
+                    b.ToTable("Reservations");
                 });
 
             modelBuilder.Entity("RoomReservationSystem.Models.Room", b =>
@@ -330,7 +340,22 @@ namespace RoomReservationSystem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Rooms", (string)null);
+                    b.ToTable("Rooms");
+                });
+
+            modelBuilder.Entity("AppUserReservation", b =>
+                {
+                    b.HasOne("RoomReservationSystem.Models.AppUser", null)
+                        .WithMany()
+                        .HasForeignKey("ParticipantsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RoomReservationSystem.Models.Reservation", null)
+                        .WithMany()
+                        .HasForeignKey("ReservationsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -384,23 +409,16 @@ namespace RoomReservationSystem.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("RoomReservationSystem.Models.AppUser", b =>
-                {
-                    b.HasOne("RoomReservationSystem.Models.Reservation", null)
-                        .WithMany("Participants")
-                        .HasForeignKey("ReservationId");
-                });
-
             modelBuilder.Entity("RoomReservationSystem.Models.Reservation", b =>
                 {
                     b.HasOne("RoomReservationSystem.Models.AppUser", "Host")
-                        .WithMany()
+                        .WithMany("HostedReservations")
                         .HasForeignKey("HostId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("RoomReservationSystem.Models.Room", "Room")
-                        .WithMany()
+                        .WithMany("Reservations")
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -410,9 +428,14 @@ namespace RoomReservationSystem.Data.Migrations
                     b.Navigation("Room");
                 });
 
-            modelBuilder.Entity("RoomReservationSystem.Models.Reservation", b =>
+            modelBuilder.Entity("RoomReservationSystem.Models.AppUser", b =>
                 {
-                    b.Navigation("Participants");
+                    b.Navigation("HostedReservations");
+                });
+
+            modelBuilder.Entity("RoomReservationSystem.Models.Room", b =>
+                {
+                    b.Navigation("Reservations");
                 });
 #pragma warning restore 612, 618
         }

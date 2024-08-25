@@ -1,5 +1,4 @@
-﻿
-using RoomReservationSystem.Models;
+﻿using RoomReservationSystem.Models;
 using RoomReservationSystem.ViewModels.Reservation;
 
 namespace RoomReservationSystem.Services.Interfaces;
