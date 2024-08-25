@@ -63,7 +63,7 @@ public class ReservationService : IReservationService
 
         //foreach (var participant in participants)
         //{
-        //    string message = $"Hello {participant.FullName}, you have been invited to ${room.Name} by ${host.FullName} at ${reservationVM.StartDate}.";
+        //    string message = $"Hello {participant.FullName}, you have been invited to {room.Name} by {host.FullName} at {reservationVM.StartDate}.";
         //    await _emailSender.SendEmailAsync(participant.Email!, "Room Invite", message);
         //}
 
